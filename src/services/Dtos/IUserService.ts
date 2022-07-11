@@ -1,5 +1,5 @@
 interface IUserService {
-    getUsers(): any;
+  getUsers(): Promise<any>;
 }
 
 export { IUserService }

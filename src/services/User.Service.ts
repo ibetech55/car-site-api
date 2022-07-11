@@ -1,27 +1,14 @@
+import { IUserRepository } from "../repositories/user.repository/interfaces/IUserRepository"
 import { IUserService } from "./Dtos/IUserService"
 
 class UserService implements IUserService {
-    constructor() {
-    }
+  constructor(private readonly UserRepository: IUserRepository) {
+  }
 
-    getUsers(): any {
-        const users = [
-            {
-                id: 1111,
-                firstname: 'Prince'
-            },
-            {
-                id: 2222,
-                firstname: 'Carlos'
-            },
-            {
-                id: 3333,
-                firstname: 'Evan'
-            },
-        ]
-
-        return users
-    }
+  async getUsers(): Promise<any> {
+    const users = await this.UserRepository.list()
+    return users
+  }
 }
 
 export { UserService }
