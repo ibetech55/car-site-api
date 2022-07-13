@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { IUserService } from '../services/Dtos/IUserService'
+import { IUserService } from '../services/interfaces/IUserService'
 export class UserController {
 
   constructor(private readonly UserService: IUserService) {
@@ -7,8 +7,12 @@ export class UserController {
 
   async getUsers(req: Request, res: Response) {
     const data = await this.UserService.getUsers()
-    console.log(data, 333)
-    res.send(data)
+    return res.status(200).json(data)
+  }
+
+  async createUser(req: Request, res: Response) {
+    const data = await this.UserService.createUser(req.body)
+    return res.status(200).json(data)
   }
 }
 
