@@ -5,7 +5,7 @@ export class UserController {
   constructor(private readonly UserService: IUserService) {
   }
 
-  async getUsers(req: Request, res: Response) {
+  async getUsers(req: Request, res: Response, next) {
     const data = await this.UserService.getUsers()
     return res.status(200).json(data)
   }

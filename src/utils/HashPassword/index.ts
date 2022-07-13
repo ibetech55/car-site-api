@@ -5,7 +5,7 @@ export class Hashpassword {
 
   }
 
-  GeneratePassword(password: string): string {
+  EncryptPassword(password: string): string {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt)
     return hash
