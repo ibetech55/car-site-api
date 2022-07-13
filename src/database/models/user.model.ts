@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("users")
 class Users {
@@ -30,6 +30,9 @@ class Users {
 
   @CreateDateColumn()
   updated_at: Date;
+
+  @Column()
+  password: string;
 
   constructor() {
     if (!this.id) {

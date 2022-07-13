@@ -9,4 +9,5 @@ export interface ICreateUsersDTO {
   date_of_birth: string;
   email: string;
   username: string;
+  password: string
 }
