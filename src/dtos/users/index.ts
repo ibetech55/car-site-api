@@ -7,6 +7,7 @@ export interface IListUsersDTO {
   username: string;
   created_at: Date;
   active: boolean;
+  deleted_at: Date;
 }
 
 export interface ICreateUsersDTO {
@@ -17,3 +18,13 @@ export interface ICreateUsersDTO {
   username: string;
   password: string
 }
+
+export interface IUpdateUserDto {
+  firstname: string;
+  lastname: string;
+  date_of_birth: string;
+  email: string;
+  username: string;
+  updated_at?: Date
+}
+

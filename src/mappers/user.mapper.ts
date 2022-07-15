@@ -1,4 +1,4 @@
-import { Users } from "../database/models/user.model";
+import { Users } from "../database/entities/user.model";
 import { IListUsersDTO } from "../dtos";
 
 export const UserMapper = (User: Users): IListUsersDTO => {
@@ -10,6 +10,7 @@ export const UserMapper = (User: Users): IListUsersDTO => {
     created_at: User?.created_at,
     active: User?.active,
     date_of_birth: User?.date_of_birth,
-    username: User?.username
+    username: User?.username,
+    deleted_at: User?.deleted_at
   }
 }

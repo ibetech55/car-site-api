@@ -1,10 +1,10 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from '../../database'
 import { IUserRepository } from "../interfaces/IUserRepository";
-import { ICreateUsersDTO, IListUsersDTO } from "../../dtos/users";
+import { ICreateUsersDTO, IListUsersDTO, IUpdateUserDto } from "../../dtos/users";
 import { UserMapper } from "../../mappers/user.mapper";
-import { Users } from "../../database/models/user.model";
-
+import { Users } from "../../database/entities/user.model";
+import { IPagination } from "../../utils/Pagination";
 
 class UserRepository implements IUserRepository {
   private readonly repository: Repository<Users>
@@ -12,11 +12,29 @@ class UserRepository implements IUserRepository {
   constructor() {
     this.repository = AppDataSource.getRepository<Users>(Users)
   }
+  async delete(id: string): Promise<Boolean> {
+    try {
+      await this.repository.softDelete(id)
+      return true;
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  async update(id: string, data: IUpdateUserDto): Promise<boolean> {
+    try {
+      await this.repository.update(id, { ...data })
+      return true;
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   async getUserById(id: string): Promise<IListUsersDTO> {
     try {
       const user = await this.repository.findOne({ where: { id } })
-      return UserMapper(user)
+      return user ? UserMapper(user) : null
     } catch (error) {
       console.log(error)
     }
@@ -41,10 +59,13 @@ class UserRepository implements IUserRepository {
 
   }
 
-  async list(): Promise<IListUsersDTO[]> {
+  async list(pagination: IPagination): Promise<IListUsersDTO[]> {
     try {
       const users = await this.repository.find({
-        select: ['id', 'firstname', 'lastname', 'date_of_birth', 'email', 'active', 'created_at', 'username']
+        select: ['id', 'firstname', 'lastname', 'date_of_birth', 'email', 'active', 'created_at', 'username'],
+        skip: pagination.skip ? pagination.skip : null,
+        take: pagination.limit ? pagination.limit : null,
+        order: pagination.orderBy ? { [pagination.orderBy]: pagination.orderType } : null
       })
 
       const data = users.map((x) => UserMapper(x))
