@@ -1,8 +1,12 @@
-import { ICreateUsersDTO, IListUsersDTO } from "../../dtos";
+import { ICreateUsersDTO, IListUsersDTO, IUpdateUserDto } from "../../dtos";
+import { IPagination, IParams } from "../../utils/Pagination";
 
 interface IUserService {
-  getUsers(): Promise<IListUsersDTO[]>;
+  getUsers(Pagination: IPagination): Promise<IListUsersDTO[]>;
   createUser(data: ICreateUsersDTO): Promise<IListUsersDTO>;
+  getUser(id: string): Promise<IListUsersDTO>;
+  updateUser(id: string, data: IUpdateUserDto): Promise<Boolean>
+  deleteUser(id: string): Promise<Boolean>
 }
 
 export { IUserService }
