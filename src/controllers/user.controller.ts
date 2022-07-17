@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { IUserService } from '../services/interfaces/IUserService'
-import { IPagination, pagination } from '../utils/Pagination'
+import { pagination } from '../utils/Pagination'
 
 export class UserController {
 

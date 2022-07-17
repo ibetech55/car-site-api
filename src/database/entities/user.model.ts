@@ -1,5 +1,6 @@
 import { v4 as uuid } from "uuid";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Cars } from "./car.model";
 
 @Entity("users")
 class Users {
@@ -36,6 +37,9 @@ class Users {
 
   @Column()
   password: string;
+
+  @OneToMany(type => Cars, cars => cars.users)
+  cars: Cars[]
 
   constructor() {
     if (!this.id) {
