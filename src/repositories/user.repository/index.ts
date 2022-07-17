@@ -1,10 +1,10 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from '../../database'
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { ICreateUsersDTO, IListUsersDTO, IUpdateUserDto } from "../../dtos/users";
+import { IUserRepository } from "../Interfaces/IUserRepository";
 import { UserMapper } from "../../mappers/user.mapper";
 import { Users } from "../../database/entities/user.model";
 import { IPagination } from "../../utils/Pagination";
+import { UserDto } from "../../dtos";
 
 class UserRepository implements IUserRepository {
   private readonly repository: Repository<Users>
@@ -22,7 +22,7 @@ class UserRepository implements IUserRepository {
 
   }
 
-  async update(id: string, data: IUpdateUserDto): Promise<boolean> {
+  async update(id: string, data: UserDto): Promise<boolean> {
     try {
       await this.repository.update(id, { ...data })
       return true;
@@ -31,16 +31,16 @@ class UserRepository implements IUserRepository {
     }
   }
 
-  async getUserById(id: string): Promise<IListUsersDTO> {
+  async getUserById(id: string): Promise<UserDto> {
     try {
-      const user = await this.repository.findOne({ where: { id } })
-      return user ? UserMapper(user) : null
+      const user = await this.repository.findOne({ where: { id }, relations: ['cars'] })
+      return UserMapper(user)
     } catch (error) {
       console.log(error)
     }
   }
 
-  async getUserByEmail(email: string): Promise<IListUsersDTO> {
+  async getUserByEmail(email: string): Promise<UserDto> {
     try {
       const user = await this.repository.findOne({ where: { email } })
       return UserMapper(user)
@@ -49,7 +49,7 @@ class UserRepository implements IUserRepository {
     }
   }
 
-  async getUserByUsername(username: string): Promise<IListUsersDTO> {
+  async getUserByUsername(username: string): Promise<UserDto> {
     try {
       const user = await this.repository.findOne({ where: { username } })
       return UserMapper(user)
@@ -59,13 +59,13 @@ class UserRepository implements IUserRepository {
 
   }
 
-  async list(pagination: IPagination): Promise<IListUsersDTO[]> {
+  async list(pagination: IPagination): Promise<UserDto[]> {
     try {
       const users = await this.repository.find({
         select: ['id', 'firstname', 'lastname', 'date_of_birth', 'email', 'active', 'created_at', 'username'],
         skip: pagination.skip ? pagination.skip : null,
         take: pagination.limit ? pagination.limit : null,
-        order: pagination.orderBy ? { [pagination.orderBy]: pagination.orderType } : null
+        order: pagination.orderBy ? { [pagination.orderBy]: pagination.orderType } : null,
       })
 
       const data = users.map((x) => UserMapper(x))
@@ -75,7 +75,7 @@ class UserRepository implements IUserRepository {
     }
   }
 
-  async create(user: ICreateUsersDTO): Promise<IListUsersDTO> {
+  async create(user: UserDto): Promise<UserDto> {
     try {
       const createdUser = this.repository.create(user);
       const newUser = await this.repository.save(createdUser)

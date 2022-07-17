@@ -1,5 +1,5 @@
 import { ICreateUsersDTO, IListUsersDTO, IUpdateUserDto } from "../../dtos";
-import { IPagination, IParams } from "../../utils/Pagination";
+import { IPagination } from "../../utils/Pagination";
 
 interface IUserService {
   getUsers(Pagination: IPagination): Promise<IListUsersDTO[]>;
