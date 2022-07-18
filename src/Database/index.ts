@@ -8,7 +8,8 @@ const AppDataSource = new DataSource({
   username: process.env.DBUSERNAME,
   password: process.env.DBPASSWORD,
   database: process.env.DBNAME,
-  synchronize: false,
+  host: process.env.DBHOST,
+  synchronize: true,
   logging: false,
   entities: [`${__dirname}/**/entities/*.{ts,js}`],
   migrations: [`${__dirname}/**/migrations/*.{ts,js}`]
