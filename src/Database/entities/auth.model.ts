@@ -1,26 +1,24 @@
 import { v4 as uuid } from "uuid";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, OneToMany } from "typeorm";
 import { Models } from "./models.model";
-import { Cars } from "./car.model";
+import { Users } from "./user.model";
 
-@Entity("brands")
-class Brands {
+@Entity("auth")
+class Auth {
 
     @PrimaryColumn()
     id?: string;
 
     @Column()
-    name: string;
+    token: string;
 
     @Column()
-    origin: string;
+    user_id: string;
 
-    @ManyToOne(type => Models, models => models.models)
-    @JoinColumn({ name: 'brand_id' })
-    models: Models[]
+    @ManyToOne(type => Users, users => users.auth)
+    @JoinColumn({ name: 'user_id' })
+    users: Users
 
-    @OneToMany(type => Cars, cars => cars.brands)
-    cars: Cars[]
 
     constructor() {
         if (!this.id) {
@@ -29,4 +27,4 @@ class Brands {
     }
 }
 
-export { Brands }
+export { Auth }

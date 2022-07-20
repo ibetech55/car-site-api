@@ -1,51 +1,55 @@
 import { v4 as uuid } from "uuid";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { Cars } from "./car.model";
+import { Auth } from "./auth.model";
 
 @Entity("users")
 class Users {
 
-  @PrimaryColumn()
-  id?: string;
+    @PrimaryColumn()
+    id?: string;
 
-  @Column()
-  firstname: string;
+    @Column()
+    firstname: string;
 
-  @Column()
-  lastname: string;
+    @Column()
+    lastname: string;
 
-  @Column()
-  date_of_birth: Date;
+    @Column()
+    date_of_birth: Date;
 
-  @Column()
-  email: string;
+    @Column()
+    email: string;
 
-  @Column()
-  username: string;
+    @Column()
+    username: string;
 
-  @Column()
-  active: boolean;
+    @Column()
+    active: boolean;
 
-  @CreateDateColumn()
-  created_at: Date;
+    @CreateDateColumn()
+    created_at: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+    @UpdateDateColumn()
+    updated_at: Date;
 
-  @DeleteDateColumn()
-  deleted_at: Date;
+    @DeleteDateColumn()
+    deleted_at: Date;
 
-  @Column()
-  password: string;
+    @Column()
+    password: string;
 
-  @OneToMany(type => Cars, cars => cars.users)
-  cars: Cars[]
+    @OneToMany(type => Cars, cars => cars.users)
+    cars: Cars[]
 
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
+    @OneToMany(type => Auth, auth => auth.users)
+    auth: Auth[]
+
+    constructor() {
+        if (!this.id) {
+            this.id = uuid();
+        }
     }
-  }
 }
 
 export { Users }
