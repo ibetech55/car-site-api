@@ -6,23 +6,26 @@ import { Cars } from "./car.model";
 @Entity("models")
 class Models {
 
-  @PrimaryColumn()
-  id?: string;
+    @PrimaryColumn()
+    id?: string;
 
-  @Column()
-  name: string;
+    @Column()
+    name: string;
 
-  @Column()
-  brand_id: string;
+    @Column()
+    brand_id: string;
 
-  @OneToMany(type => Cars, cars => cars.brands)
-  cars: Cars[]
+    @OneToMany(type => Brands, brands => brands.models)
+    models: Models
 
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
+    @OneToMany(type => Cars, cars => cars.brands)
+    cars: Cars[]
+
+    constructor() {
+        if (!this.id) {
+            this.id = uuid();
+        }
     }
-  }
 }
 
 export { Models }

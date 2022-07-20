@@ -1,13 +1,15 @@
-import { ICreateUsersDTO, IListUsersDTO, IUpdateUserDto } from "../../Dtos";
+import { UserDto } from "../../Dtos";
+import { IPagination } from "../../Utils/Pagination";
 
 
 export interface IUserRepository {
-  list(paginate: any): Promise<IListUsersDTO[]>;
-  create(data: ICreateUsersDTO): Promise<IListUsersDTO>;
-  getUserById(id: string): Promise<IListUsersDTO>
-  getUserByEmail(email: string): Promise<IListUsersDTO>
-  getUserByUsername(username: string): Promise<IListUsersDTO>
-  update(id: string, data: IUpdateUserDto): Promise<Boolean>
-  delete(id: string): Promise<Boolean>
+    list(paginate: IPagination): Promise<UserDto[]>;
+    create(data: UserDto): Promise<UserDto>;
+    getUserById(id: string): Promise<UserDto>
+    getUserByEmail(email: string): Promise<UserDto>
+    getUserByUsername(username: string): Promise<UserDto>
+    update(id: string, data: UserDto): Promise<Boolean>
+    delete(id: string): Promise<Boolean>
+    findOne(data: UserDto): Promise<UserDto>
 }
 
