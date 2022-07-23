@@ -6,49 +6,60 @@ import { IUserService } from "./Interfaces/IUserService"
 import { StatusCodeEnum } from '../Enums/statusCodes'
 import { IPagination } from "../Utils/Pagination"
 import { UserDto } from "../Dtos"
+import { RegistrationEmailQueue } from "../Queue"
 const { BAD_REQUEST } = StatusCodeEnum
 
 class UserService implements IUserService {
-  constructor(private readonly UserRepository: IUserRepository, private readonly HashPassword: Hashpassword) {
-  }
-  async deleteUser(id: string): Promise<Boolean> {
-    const user: UserDto = await this.UserRepository.getUserById(id)
-    if (!user) return NotFound('User not found')
-    const d = await this.UserRepository.delete(id)
-    return d
-  }
+    constructor(private readonly UserRepository: IUserRepository, private readonly HashPassword: Hashpassword) {
+    }
+    async deleteUser(id: string): Promise<Boolean> {
+        const user: UserDto = await this.UserRepository.getUserById(id)
+        if (!user) return NotFound('User not found')
+        const d = await this.UserRepository.delete(id)
+        return d
+    }
 
-  async updateUser(id: string, data: UserDto): Promise<Boolean> {
-    const user = await this.UserRepository.getUserById(id)
-    if (!user) return NotFound('User not found')
+    async updateUser(id: string, data: UserDto): Promise<Boolean> {
+        const user = await this.UserRepository.getUserById(id)
+        if (!user) return NotFound('User not found')
 
-    const updatedUser = this.UserRepository.update(id, data)
-    return updatedUser
-  }
+        const updatedUser = this.UserRepository.update(id, data)
+        return updatedUser
+    }
 
-  async getUser(id: string): Promise<UserDto> {
-    const user = await this.UserRepository.getUserById(id)
-    return user
-  }
+    async getUser(id: string): Promise<UserDto> {
+        const user = await this.UserRepository.getUserById(id)
+        return user
+    }
 
-  async createUser(data: UserDto): Promise<UserDto> {
-    const email = await this.UserRepository.getUserByEmail(data.email)
+    async createUser(data: UserDto): Promise<UserDto> {
+        const email = await this.UserRepository.getUserByEmail(data.email)
 
-    const username = await this.UserRepository.getUserByUsername(data.username)
+        const username = await this.UserRepository.getUserByUsername(data.username)
 
-    if (email.email || username.username) BadRequest('User already exists')
+        // if (email.email || username.username) BadRequest('User already exists')
 
-    const hashedPassword = this.HashPassword.EncryptPassword(data.password)
-    data.password = hashedPassword;
+        const hashedPassword = this.HashPassword.EncryptPassword(data.password)
+        data.password = hashedPassword;
 
-    const user = await this.UserRepository.create(data)
-    return user
-  }
+        const user = await this.UserRepository.create(data)
 
-  async getUsers(Pagination: IPagination): Promise<UserDto[]> {
-    const users = await this.UserRepository.list(Pagination)
-    return users
-  }
+        if (user) {
+            const registrationEmailData = {
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email
+            }
+
+            await RegistrationEmailQueue.add({ user: registrationEmailData })
+        }
+        return user
+    }
+
+    async getUsers(Pagination: IPagination): Promise<UserDto[]> {
+        const users = await this.UserRepository.list(Pagination)
+        return users
+    }
 }
 
 export { UserService }
