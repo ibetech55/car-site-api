@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IAuthService } from "../Services/Interfaces/IAuthService";
-import { AccessDenied } from "../Utils/ResponseHandlers";
+import { AccessDenied, BadRequest } from "../Utils/ResponseHandlers";
 import { storeAccessToken, storeRefreshToken } from "../Utils/TokenHandelers";
 
 class AuthController {
@@ -28,6 +28,16 @@ class AuthController {
         } else {
             AccessDenied('Access Denied')
         }
+    }
+
+    async VerifyAccount(req: Request, res: Response) {
+        const { id } = req.params
+        const data = req.body;
+
+        if (!req.body.access_code) BadRequest('Please provide a verification code')
+        await this.AuthService.VerifyAccount(id, data);
+
+        res.status(200).json({ message: 'Account Verified' })
     }
 }
 

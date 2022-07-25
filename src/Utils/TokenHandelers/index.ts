@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { sign, verify } from "jsonwebtoken"
-const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRES, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES } = process.env;
+const { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRES, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES, ACCESS_TOKEN } = process.env;
 
 export interface ITokenPayload {
     iat?: number;
@@ -35,4 +35,3 @@ export const storeAccessToken = (accessToken: string, res: Response) => {
         maxAge: 20 * 1000,
     })
 }
-

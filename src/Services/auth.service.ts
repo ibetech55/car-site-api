@@ -1,6 +1,6 @@
 import { UserDto } from "../Dtos"
 import { IUserRepository } from "../Repositories/Interfaces/IUserRepository"
-import { BadRequest } from "../Utils/ResponseHandlers"
+import { BadRequest, NotFound } from "../Utils/ResponseHandlers"
 import { AuthenticatedUser, IAuthService, LoginUser, RefreshResponse } from "./Interfaces/IAuthService"
 import { Hashpassword } from "../Utils/HashPassword";
 import { IAuthRepository } from "../Repositories/Interfaces/IAuthRepository";
@@ -9,11 +9,24 @@ import { generateAccessToken, generateRefreshToken, ITokenPayload, verifyRefresh
 class AuthService implements IAuthService {
     constructor(private readonly AuthRepository: IAuthRepository, private readonly UserRepository: IUserRepository, private readonly HashPassord: Hashpassword) {
     }
+
+    async VerifyAccount(id: string, data: UserDto): Promise<boolean> {
+        const user = await this.UserRepository.getUserById(id);
+        if (!user) return NotFound('No user found');
+        if (user.access_code !== data.access_code) return BadRequest('Invalid code')
+
+        const verifiedUser = await this.UserRepository.update(id, { active: true, access_code: null })
+        if (verifiedUser) return true
+        return false
+    }
+
     async Refresh(token: string): Promise<RefreshResponse> {
         if (token) {
             const payload: ITokenPayload = verifyRefreshToken(token) as ITokenPayload
 
             if (payload) {
+                const user = await this.UserRepository.getUserById(payload.id);
+                if (!user || !user.active) BadRequest('User does not exist');
                 const newAccessToken = generateAccessToken({ id: payload.id })
                 return { accessToken: newAccessToken }
             }
