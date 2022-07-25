@@ -7,6 +7,7 @@ import { StatusCodeEnum } from '../Enums/statusCodes'
 import { IPagination } from "../Utils/Pagination"
 import { UserDto } from "../Dtos"
 import { RegistrationEmailQueue } from "../Queue"
+import { RandomCode } from "../Utils/CodeGenerator"
 const { BAD_REQUEST } = StatusCodeEnum
 
 class UserService implements IUserService {
@@ -42,13 +43,17 @@ class UserService implements IUserService {
         const hashedPassword = this.HashPassword.EncryptPassword(data.password)
         data.password = hashedPassword;
 
+        const accessCode = RandomCode();
+        data.access_code = accessCode;
+
         const user = await this.UserRepository.create(data)
 
         if (user) {
             const registrationEmailData = {
                 firstname: user.firstname,
                 lastname: user.lastname,
-                email: user.email
+                email: user.email,
+                accessCode
             }
 
             await RegistrationEmailQueue.add({ user: registrationEmailData })

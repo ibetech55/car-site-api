@@ -39,6 +39,10 @@ class Users {
     @Column()
     password: string;
 
+    @Column()
+    access_code: string;
+
+
     @OneToMany(type => Cars, cars => cars.users)
     cars: Cars[]
 

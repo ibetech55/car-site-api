@@ -12,6 +12,7 @@ export const UserMapper = (User: UserDto): UserDto => {
         date_of_birth: User?.date_of_birth,
         username: User?.username,
         deleted_at: User?.deleted_at,
-        password: User?.password
+        password: User?.password,
+        access_code: User?.access_code
     }
 }
