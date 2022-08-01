@@ -15,8 +15,7 @@ class Brands {
     @Column()
     origin: string;
 
-    @ManyToOne(type => Models, models => models.models)
-    @JoinColumn({ name: 'brand_id' })
+    @OneToMany(type => Models, models => models.brands)
     models: Models[]
 
     @OneToMany(type => Cars, cars => cars.brands)

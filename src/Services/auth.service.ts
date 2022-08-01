@@ -1,6 +1,6 @@
 import { UserDto } from "../Dtos"
 import { IUserRepository } from "../Repositories/Interfaces/IUserRepository"
-import { BadRequest, NotFound } from "../Utils/ResponseHandlers"
+import { AccessDenied, BadRequest, NotFound } from "../Utils/ResponseHandlers"
 import { AuthenticatedUser, IAuthService, LoginUser, RefreshResponse } from "./Interfaces/IAuthService"
 import { Hashpassword } from "../Utils/HashPassword";
 import { IAuthRepository } from "../Repositories/Interfaces/IAuthRepository";
@@ -39,6 +39,8 @@ class AuthService implements IAuthService {
         const user: UserDto = await this.UserRepository.getUserByEmail(data?.email)
 
         if (!user) BadRequest('Invalid Login')
+
+        if (!user.active) AccessDenied('Access Denied')
 
         const checkPassword = this.HashPassord.DecryptPassword(data.password, user.password)
         if (!checkPassword) BadRequest('Invalid Login')

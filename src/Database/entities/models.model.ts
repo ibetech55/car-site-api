@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { Column, Entity, PrimaryColumn, OneToMany, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, OneToMany, JoinColumn, ManyToOne } from "typeorm";
 import { Brands } from "./brand.model";
 import { Cars } from "./car.model";
 
@@ -15,8 +15,9 @@ class Models {
     @Column()
     brand_id: string;
 
-    @OneToMany(type => Brands, brands => brands.models)
-    models: Models
+    @ManyToOne(type => Brands, brands => brands.models) //brands have many models 
+    @JoinColumn({ name: 'brand_id' })
+    brands: Brands
 
     @OneToMany(type => Cars, cars => cars.brands)
     cars: Cars[]

@@ -12,21 +12,10 @@ class AppServer {
         this.middlewares();
         this.routes();
         this.errorHandler();
+        this.defaultHeaders();
     }
 
     middlewares() {
-        this.server.use((req, res, next) => {
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader(
-                "Access-Control-Allow-Headers",
-                "Origin, X-Requested-With, Content-Type, Accept"
-            );
-            res.setHeader(
-                "Access-Control-Allow-Methods",
-                "GET, POST, PATCH, DELETE, OPTIONS"
-            );
-            next();
-        });
         this.server.use(express.json())
         this.server.use(cookieParser())
         this.server.use(cors({ origin: "http://localhost:3000", credentials: true }))
@@ -43,6 +32,21 @@ class AppServer {
             }
             return res.status(500).json({ message: `Internal Server Error ${err.message}` })
         })
+    }
+
+    defaultHeaders() {
+        this.server.use((req, res, next) => {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader(
+                "Access-Control-Allow-Headers",
+                "Origin, X-Requested-With, Content-Type, Accept"
+            );
+            res.setHeader(
+                "Access-Control-Allow-Methods",
+                "GET, POST, PATCH, DELETE, OPTIONS"
+            );
+            next();
+        });
     }
 }
 
