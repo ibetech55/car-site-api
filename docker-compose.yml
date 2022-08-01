@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+    car_site_backend:
+        container_name: car_site_backend
+        image: car_site_api_image
+        build:
+            context: .
+        ports:
+            - "8000:8000"
+        environment:
+            - DBPORT=5432
+            - DBNAME=car_site_db
+            - DBPASSWORD=prince
+            - DBUSERNAME=prince
+            - DBHOST=car_site_database
+            - API_KEY=APIKEY
+            - ACCESS_TOKEN_SECRET=accesstokensecret
+            - REFRESH_TOKEN_SECRET=refreshtokensecret
+            - ACCESS_TOKEN_EXPIRES=10s
+            - REFRESH_TOKEN_EXPIRES=20s
+        volumes:
+            - ./:/src
+        depends_on:
+            - car_site_database
+    car_site_database:
+        container_name: car_site_database
+        image: "postgres:12"
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=prince
+            - POSTGRES_PASSWORD=prince
+            - POSTGRES_DB=car_site_db
+        volumes:
+            - nps_data:/var/lib/postgresql/data
+
+volumes:
+    nps_data: {}
