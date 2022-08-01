@@ -11,6 +11,7 @@ export interface UserDto {
     updated_at?: Date;
     deleted_at?: Date;
     access_code?: string;
+    profile_image?: string;
 }
 
 

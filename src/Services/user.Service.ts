@@ -5,9 +5,12 @@ import { BadRequest, NotFound } from "../Utils/ResponseHandlers"
 import { IUserService } from "./Interfaces/IUserService"
 import { StatusCodeEnum } from '../Enums/statusCodes'
 import { IPagination } from "../Utils/Pagination"
-import { UserDto } from "../Dtos"
+import { ImageDto, UserDto } from "../Dtos"
 import { RegistrationEmailQueue } from "../Queue"
-import { RandomCode } from "../Utils/CodeGenerator"
+import { GenerateImageName, GenerateRandomString, RandomCode } from "../Utils/CodeGenerator"
+import { IImageService } from "./Interfaces/IImageService"
+import path from "path"
+import { HandleImage } from "../Utils/ImageHandler"
 const { BAD_REQUEST } = StatusCodeEnum
 
 class UserService implements IUserService {
@@ -33,12 +36,17 @@ class UserService implements IUserService {
         return user
     }
 
-    async createUser(data: UserDto): Promise<UserDto> {
-        const email = await this.UserRepository.getUserByEmail(data.email)
+    async createUser(data: UserDto, file?: any): Promise<UserDto> {
+        const image = file && file.default_image ? file.default_image : null;
 
-        const username = await this.UserRepository.getUserByUsername(data.username)
+        if (image && !image.mimetype.startsWith("image")) BadRequest("Invalid image file")
+        data.profile_image = GenerateImageName(image.name)
 
-        // if (email.email || username.username) BadRequest('User already exists')
+        const { email } = await this.UserRepository.getUserByEmail(data.email)
+
+        const { username } = await this.UserRepository.getUserByUsername(data.username)
+
+        // if (email || username) BadRequest('User already exists')
 
         const hashedPassword = this.HashPassword.EncryptPassword(data.password)
         data.password = hashedPassword;
@@ -47,13 +55,29 @@ class UserService implements IUserService {
         data.access_code = accessCode;
 
         const user = await this.UserRepository.create(data)
-
         if (user) {
+
             const registrationEmailData = {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 email: user.email,
                 accessCode
+            }
+
+            let imageData: ImageDto
+
+            if (image && image.name) {
+                const imageName = GenerateImageName(image.name);
+                imageData = {
+                    image_name: imageName,
+                }
+
+                const response = await HandleImage(image, imageData)
+                console.log(response)
+
+                if (response.statusCode === 400) {
+                    await this.updateUser(user.id, { profile_image: null })
+                }
             }
 
             await RegistrationEmailQueue.add({ user: registrationEmailData })
