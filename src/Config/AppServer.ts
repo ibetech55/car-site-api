@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan'
+import expressFileUpload from "express-fileupload"
 import cookieParser from 'cookie-parser';
 import { AppError } from '../ErrorHandler/AppError';
 import { Authorization } from '../Middlewares/Authorization';
@@ -18,8 +19,9 @@ class AppServer {
     middlewares() {
         this.server.use(express.json())
         this.server.use(cookieParser())
-        this.server.use(cors({ origin: "http://localhost:3000", credentials: true }))
+        this.server.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
         this.server.use(morgan(`Method::method :url :status :res[content-length] - :response-time ms`))
+        this.server.use(expressFileUpload());
     }
     routes() {
         this.server.use('/v1/api', Authorization, router)

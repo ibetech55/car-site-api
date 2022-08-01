@@ -1,7 +1,8 @@
 import { v4 as uuid } from "uuid";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { Cars } from "./car.model";
 import { Auth } from "./auth.model";
+import { Images } from "./image.model";
 
 @Entity("users")
 class Users {
@@ -42,12 +43,17 @@ class Users {
     @Column()
     access_code: string;
 
+    @Column()
+    profile_image: string;
 
     @OneToMany(type => Cars, cars => cars.users)
     cars: Cars[]
 
     @OneToMany(type => Auth, auth => auth.users)
     auth: Auth[]
+
+    @OneToOne(type => Images, image => image.cars)
+    images: Images[]
 
     constructor() {
         if (!this.id) {
