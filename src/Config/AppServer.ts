@@ -20,7 +20,7 @@ class AppServer {
         this.server.use(express.json())
         this.server.use(cookieParser())
         this.server.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
-        this.server.use(morgan(`Method::method :url :status :res[content-length] - :response-time ms`))
+        this.server.use(morgan(`Method: :method :url :status :res[content-length] - :response-time ms`))
         this.server.use(expressFileUpload());
     }
     routes() {

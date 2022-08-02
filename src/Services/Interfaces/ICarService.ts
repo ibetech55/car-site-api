@@ -3,7 +3,7 @@ import { IPagination } from "../../Utils/Pagination";
 
 interface ICarService {
     getCars(Pagination: IPagination): Promise<CarsDto[]>;
-    createCar(data: CarsDto): Promise<CarsDto>;
+    createCar(data: CarsDto, files: any): Promise<CarsDto>;
     getCar(id: string): Promise<CarsDto>;
     updateCar(id: string, data: CarsDto): Promise<Boolean>
     deleteCar(id: string): Promise<String>
