@@ -14,7 +14,7 @@ export class CarController {
     }
 
     async createCar(req: Request, res: Response) {
-        const data = await this.CarService.createCar(req.body)
+        const data = await this.CarService.createCar(req.body, req.files)
         return res.status(200).json(data)
     }
 

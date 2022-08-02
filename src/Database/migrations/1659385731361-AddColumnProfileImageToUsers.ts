@@ -8,7 +8,6 @@ export class AddColumnProfileImageToUsers1659385731361 implements MigrationInter
             type: 'VARCHAR(200)',
             isNullable: true,
         }))
-        await queryRunner.dropColumn('images', 'user_id')
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

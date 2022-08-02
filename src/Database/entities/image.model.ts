@@ -31,8 +31,9 @@ class Images {
     @OneToOne(type => Users, users => users.images)
     users: Users
 
-    @OneToMany(type => Cars, cars => cars.brands)
-    cars: Cars[]
+    @OneToOne(type => Cars, cars => cars.images)
+    @JoinColumn({ name: "car_id" })
+    cars: Cars
 
     constructor() {
         if (!this.id) {

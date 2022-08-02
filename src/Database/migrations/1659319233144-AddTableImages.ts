@@ -24,12 +24,12 @@ export class AddTableImages1659319233144 implements MigrationInterface {
                 },
                 {
                     name: 'car_id',
-                    type: 'VARCHAR(50)',
+                    type: 'UUID',
                     isNullable: true
                 },
                 {
                     name: 'user_id',
-                    type: 'VARCHAR(50)',
+                    type: 'UUID',
                     isNullable: true
                 },
                 {
