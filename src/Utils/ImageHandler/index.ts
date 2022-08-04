@@ -19,6 +19,7 @@ export const HandleImage = async (image, imageData: ImageDto, carImage?: boolean
 
         return data
     } catch (error) {
+        console.log(error)
         return error.data
     }
 }

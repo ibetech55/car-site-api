@@ -24,7 +24,7 @@ class AppServer {
         this.server.use(expressFileUpload());
     }
     routes() {
-        this.server.use('/v1/api', Authorization, router)
+        this.server.use('/v1/api', router)
     }
 
     errorHandler() {
