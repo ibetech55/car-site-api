@@ -4,6 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
+        "start": "node build/server.js",
         "dev": "npm-run-all -p dev:*",
         "dev:server": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/server.ts",
         "dev:queue": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/queue.ts",

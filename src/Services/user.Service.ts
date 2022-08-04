@@ -69,16 +69,15 @@ class UserService implements IUserService {
                 }
 
                 const response = await HandleImage(image, imageData)
-
                 if (response.statusCode === 400) {
                     await this.updateUser(user.id, { profile_image: null })
                 }
             }
 
             await RegistrationEmailQueue.add({ user: registrationEmailData })
+            return user
         }
 
-        return user
     }
 
     async getUsers(Pagination: IPagination): Promise<UserDto[]> {
