@@ -5,7 +5,7 @@ import { Authentication } from '../Middlewares/Authentication';
 const UserRouter = Router();
 
 UserRouter
-    .get("/", Authentication, (req: Request, res: Response) => UserContainer().getUsers(req, res))
+    .get("/", (req: Request, res: Response) => UserContainer().getUsers(req, res))
     .post("/", (req: Request, res: Response) => UserContainer().createUser(req, res))
     .get("/:id", (req: Request, res: Response) => UserContainer().getUser(req, res))
     .put("/:id", (req: Request, res: Response) => UserContainer().updateUser(req, res))

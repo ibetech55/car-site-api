@@ -1,4 +1,3 @@
-import { AppError } from "../ErrorHandler/AppError"
 import { IUserRepository } from "../Repositories/Interfaces/IUserRepository"
 import { Hashpassword } from "../Utils/HashPassword"
 import { BadRequest, NotFound } from "../Utils/ResponseHandlers"
@@ -7,11 +6,8 @@ import { StatusCodeEnum } from '../Enums/statusCodes'
 import { IPagination } from "../Utils/Pagination"
 import { ImageDto, UserDto } from "../Dtos"
 import { RegistrationEmailQueue } from "../Queue"
-import { GenerateImageName, GenerateRandomString, RandomCode } from "../Utils/CodeGenerator"
-import { IImageService } from "./Interfaces/IImageService"
-import path from "path"
+import { GenerateImageName, RandomCode } from "../Utils/CodeGenerator"
 import { HandleImage } from "../Utils/ImageHandler"
-const { BAD_REQUEST } = StatusCodeEnum
 
 class UserService implements IUserService {
     constructor(private readonly UserRepository: IUserRepository, private readonly HashPassword: Hashpassword) {
@@ -73,7 +69,6 @@ class UserService implements IUserService {
                 }
 
                 const response = await HandleImage(image, imageData)
-                console.log(response)
 
                 if (response.statusCode === 400) {
                     await this.updateUser(user.id, { profile_image: null })
@@ -82,6 +77,7 @@ class UserService implements IUserService {
 
             await RegistrationEmailQueue.add({ user: registrationEmailData })
         }
+
         return user
     }
 
