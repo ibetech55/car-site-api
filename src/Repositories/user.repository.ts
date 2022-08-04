@@ -67,14 +67,13 @@ class UserRepository implements IUserRepository {
     async list(pagination: IPagination): Promise<UserDto[]> {
         try {
             const users = await this.repository.find({
-                select: ['id', 'firstname', 'lastname', 'date_of_birth', 'email', 'active', 'created_at', 'username'],
+                select: ['id', 'firstname', 'lastname', 'date_of_birth', 'email', 'active', 'created_at', 'username', 'profile_image'],
                 skip: pagination.skip ? pagination.skip : null,
                 take: pagination.limit ? pagination.limit : null,
                 order: pagination.orderBy ? { [pagination.orderBy]: pagination.orderType } : null,
             })
 
-            const data = users.map((x) => UserMapper(x))
-            return data;
+            return users;
         } catch (error) {
             console.log(error)
         }

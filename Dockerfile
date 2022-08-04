@@ -2,11 +2,11 @@ FROM node:14.19.1
 
 EXPOSE 8000
 
-WORKDIR /src
+WORKDIR /app
+
+COPY ./package*.json ./
 
 RUN npm install -g npm
-
-COPY package*.json ./
 
 RUN npm install
 
