@@ -36,7 +36,8 @@ class UserService implements IUserService {
         const image = file && file.default_image ? file.default_image : null;
 
         if (image && !image.mimetype.startsWith("image")) BadRequest("Invalid image file")
-        data.profile_image = GenerateImageName(image.name)
+        const imageName = GenerateImageName(image.name);
+        data.profile_image = imageName;
 
         const { email } = await this.UserRepository.getUserByEmail(data.email)
 
@@ -63,13 +64,13 @@ class UserService implements IUserService {
             let imageData: ImageDto
 
             if (image && image.name) {
-                const imageName = GenerateImageName(image.name);
+                ;
                 imageData = {
                     image_name: imageName,
                 }
 
                 const response = await HandleImage(image, imageData)
-                if (response.statusCode === 400) {
+                if (response && response.statusCode === 400) {
                     await this.updateUser(user.id, { profile_image: null })
                 }
             }

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ImageDto } from "../../Dtos";
 
 export const HandleImage = async (image, imageData: ImageDto, carImage?: boolean) => {
+    console.log(imageData)
     try {
         const imageService = new ImageService(new ImageRepository());
         const imageBase64 = Buffer.from(image.data).toString('base64');
