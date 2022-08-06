@@ -1,4 +1,3 @@
-import { Users } from "../Database/entities/user.model";
 import { UserDto } from "../Dtos";
 
 export const UserMapper = (User: UserDto): UserDto => {
@@ -13,6 +12,7 @@ export const UserMapper = (User: UserDto): UserDto => {
         username: User?.username,
         deleted_at: User?.deleted_at,
         password: User?.password,
-        access_code: User?.access_code
+        access_code: User?.access_code,
+        profile_image: User?.profile_image
     }
 }

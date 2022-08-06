@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { encode, decode } from 'node-base64-image';
 import { IUserService } from '../Services/Interfaces/IUserService'
 import { pagination } from '../Utils/Pagination'
 
@@ -14,7 +15,8 @@ export class UserController {
     }
 
     async createUser(req: Request, res: Response) {
-        const data = await this.UserService.createUser(req.body)
+
+        const data = await this.UserService.createUser(req.body, req.files)
         return res.status(200).json(data)
     }
 
@@ -25,7 +27,7 @@ export class UserController {
 
     async updateUser(req: Request, res: Response) {
         const data = await this.UserService.updateUser(req.params.id, req.body)
-        return res.status(200).json(data)
+        return res.status(201).json(data)
     }
 
     async deleteUser(req: Request, res: Response) {
