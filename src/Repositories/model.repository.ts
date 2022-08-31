@@ -66,8 +66,23 @@ class ModelRepository implements IModelRepository {
         } catch (error) {
             console.log(error)
         }
-
     }
+
+    async listByBrandId(brandId: string, pagination: IPagination): Promise<ModelDto[]> {
+        console.log(brandId)
+        try {
+            const models = await this.repository.find({
+                where: { brand_id: brandId },
+                order: pagination.orderBy ? { [pagination.orderBy]: pagination.orderType } : null,
+                relations: ['brands'],
+            })
+            return models;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 }
 
 export { ModelRepository }

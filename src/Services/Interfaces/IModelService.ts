@@ -1,4 +1,4 @@
-import { ModelDto } from "../../Dtos";
+import { BrandDto, ModelDto } from "../../Dtos";
 import { IPagination } from "../../Utils/Pagination";
 
 interface IModelService {
@@ -7,6 +7,7 @@ interface IModelService {
     getModelById(id: string): Promise<ModelDto>;
     update(id: string, data: ModelDto): Promise<Boolean>
     delete(id: string): Promise<String>
+    listByBrandId(brandId: string, pagination: IPagination): Promise<BrandDto[]>;
 }
 
 export { IModelService }

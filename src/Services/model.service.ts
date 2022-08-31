@@ -1,4 +1,4 @@
-import { ModelDto } from "../Dtos"
+import { BrandDto, ModelDto } from "../Dtos"
 import { BadRequest, NotFound } from "../Utils/ResponseHandlers"
 import { IPagination } from "../Utils/Pagination"
 import { IModelRepository } from "../Repositories/Interfaces/IModelRepository"
@@ -6,6 +6,13 @@ import { IModelService } from "./Interfaces/IModelService"
 
 class ModelService implements IModelService {
     constructor(private readonly ModelRepository: IModelRepository) {
+    }
+    async listByBrandId(brandId: string, pagination: IPagination): Promise<ModelDto[]> {
+        const models = await this.ModelRepository.listByBrandId(brandId, pagination)
+
+        if (!models) NotFound('No models were found')
+
+        return models;
     }
     async delete(id: string): Promise<String> {
         const model: ModelDto = await this.ModelRepository.getModelById(id)

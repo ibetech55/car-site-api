@@ -22,16 +22,33 @@ export const verifyRefreshToken = (resfreshToken: string) => {
     return payload;
 }
 
+export const verifyAccessToken = (accessToken: string) => {
+    const payload: ITokenPayload | string = verify(accessToken, ACCESS_TOKEN_SECRET)
+    return payload;
+}
+
 export const storeRefreshToken = (refreshToken: string, res: Response) => {
     res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
-        maxAge: 10 * 1000,
+        maxAge: 1000 * 60 * 60 * 10,
     })
 }
 
 export const storeAccessToken = (accessToken: string, res: Response) => {
     res.cookie("access_token", accessToken, {
         httpOnly: true,
-        maxAge: 20 * 1000,
+        maxAge: 1000 * 60 * 60 * 5,
     })
 }
+
+export const compareTokens = (accessToken: string, refreshToken: string) => {
+    const verifiedRefreshToken = verifyRefreshToken(refreshToken) as ITokenPayload
+    const verifiedAccessToken = verifyAccessToken(accessToken) as ITokenPayload
+
+    return {
+        compare: verifiedRefreshToken.id === verifiedAccessToken.id,
+        refreshToken: verifiedRefreshToken,
+        accessToken: verifiedAccessToken,
+    }
+}
+

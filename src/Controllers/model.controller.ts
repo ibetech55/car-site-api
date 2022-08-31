@@ -32,5 +32,12 @@ export class ModelController {
         const data = await this.ModelService.delete(req.params.id)
         return res.status(200).json(data)
     }
+
+    async getModelsByBrandId(req: Request, res: Response) {
+        const { brandId } = req.params
+        const pagination = req.query
+        const data = await this.ModelService.listByBrandId(brandId as string, pagination)
+        return res.status(200).json(data)
+    }
 }
 

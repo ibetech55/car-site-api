@@ -34,5 +34,11 @@ export class UserController {
         const data = await this.UserService.deleteUser(req.params.id)
         return res.status(200).json(data)
     }
+
+    async getMe(req: Request, res: Response) {
+        const c = req.cookies
+        const data = await this.UserService.getUser('db4a7f8d-7476-4a0a-a53e-a1d94b4c5fe8')
+        return res.status(200).json(data)
+    }
 }
 

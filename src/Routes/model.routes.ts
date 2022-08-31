@@ -9,5 +9,6 @@ ModelRouter
     .get("/:id", (req: Request, res: Response) => ModelContainer().getModel(req, res))
     .put("/:id", (req: Request, res: Response) => ModelContainer().update(req, res))
     .delete("/:id", (req: Request, res: Response) => ModelContainer().delete(req, res))
+    .get("/models-by-brand/:brandId", (req: Request, res: Response) => ModelContainer().getModelsByBrandId(req, res))
 
 export { ModelRouter }
